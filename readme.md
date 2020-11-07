@@ -1,32 +1,30 @@
-### REACT-GETSCREEN
+### REACT-USEGETSCREEN
 
-This package provides a React higher order component which adds
-some useful methods to your wrapped components in order to
-get your screen width.
-While you should solve your responsiveness issues with css,
-sometimes you just need to render different components depending
-on the display type.
+This packagge provides a hook to provide some functions that you can use to determine the 
+type of screen.  Mobile `isMobile`, Tablet `isTablet`, Desktop `isDesktop`
 
 ###### Install
 ```
-npm install react-getscreen --save
+npm install react-usegetscreen --save
+yarn add react-usegetscreen
 ```
 
 ###### Example
 
 ```
 import React, { Component } from 'react';
-import {withGetScreen} from 'react-getscreen'
+import { useGetScreen } from 'react-usegetscreen'
 
-class Test extends Component {
-  render() {
-    if (this.props.isMobile()) return <div>Mobile</div>;
-    if (this.props.isTablet()) return <div>Tablet</div>;
+class Test = () => {
+    
+    { isMobile, isTablet, isDesktop } = useGetScreen();
+
+    if (isMobile()) return <div>Mobile</div>;
+    if (isTablet()) return <div>Tablet</div>;
     return <div>Desktop</div>;
-  }
 }
 
-export default withGetScreen(Test);
+export default Test;
 ```
 
 It supports an options object containing following props:

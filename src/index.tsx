@@ -1,5 +1,5 @@
-import * as React from 'react';
-import * as _ from 'lodash'
+import * as React from "react";
+import * as _ from "lodash";
 
 export interface withGetScreenOptions {
   mobileLimit: Number,
@@ -22,63 +22,55 @@ export enum ScreenType {
   DESKTOP
 }
 
-export function withGetScreen<T>(WrappedComp: React.ComponentClass<T>, options = defaultOptions): React.ComponentClass {
-  return class extends React.Component<T, withGetScreenState> {
-    constructor() {
-      super();
-      this.onResize = _.throttle(this.onResize, 100);
-      this.state = {
-        currentSize: this.getSize(window.innerWidth)
-      }
+export function useGetScreen = (options = defaultOptions) => {
+
+    const getSize = (size: Number): ScreenType => {
+        if (size <= options.mobileLimit) {
+            return ScreenType.MOBILE;
+        } else if (size >= options.tabletLimit) {
+            return ScreenType.DESKTOP;
+        } else {
+            return ScreenType.TABLET;
+        }
     }
-    componentDidMount() {
-      if (options.shouldListenOnResize) {
-        window.addEventListener('resize', this.onResize);
-      }
-    }
-    componentWillUnmount() {
-      this.onResize.cancel()
-      window.removeEventListener('resize', this.onResize);
+    const [currentSize, setCurrentSize] = React.useState<number>(getSize(window.innerWidth));
+    const onResize = () => {
+        const newSize = getSize(window.innerWidth);
+        if (newSize !== currentSize) {
+            setCurrentSize(newSize);
+        }
     }
 
-    onResize: any = () => {
-      const newSize = this.getSize(window.innerWidth);
-      if (newSize !== this.state.currentSize) {
-        this.setState({
-          currentSize: newSize
-        });
-      }
+    const onResizeThrottle = _.throttle(onResize, 100);
+
+    React.useEffect(() => {
+        if (options.shouldListenOnResize) {
+            window.addEventListener('resize', onResizeThrottle);
+        }
+    });
+
+    React.useEffect(() => {
+        if (options.shouldListenOnResize) {
+            window.addEventListener('resize', onResizeThrottle);
+        }
+        return () => {
+            // componentwillunmount in functional component.
+            // Anything in here is fired on component unmount.
+            onResizeThrottle.cancel()
+            window.removeEventListener('resize', onResizeThrottle);
+        }
+    }, [options, onResizeThrottle]);
+
+    const isMobile = () => {
+      return currentSize === ScreenType.MOBILE;
+    }
+    const isTablet = () => {
+      return currentSize === ScreenType.TABLET;
     }
 
-    getSize(size: Number): ScreenType {
-      if (size <= options.mobileLimit) {
-        return ScreenType.MOBILE;
-      } else if (size >= options.tabletLimit) {
-        return ScreenType.DESKTOP;
-      } else {
-        return ScreenType.TABLET;
-      }
+    const isDesktop = () => {
+      return currentSize === ScreenType.DESKTOP;
     }
 
-    isMobile = () => {
-      return this.state.currentSize === ScreenType.MOBILE;
-    }
-    isTablet = () => {
-      return this.state.currentSize === ScreenType.TABLET;
-    }
-    isDesktop = () => {
-      return this.state.currentSize === ScreenType.DESKTOP;
-    }
-    render() {
-      const detectMethods = {
-        isMobile: this.isMobile,
-        isTablet: this.isTablet,
-        isDesktop: this.isDesktop
-      }
-      return <WrappedComp
-        {...detectMethods}
-        {...this.props}
-      />
-    }
-  }
+    return { isMobile, isTablet, isDesktop };
 }
