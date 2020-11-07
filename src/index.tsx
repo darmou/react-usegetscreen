@@ -22,7 +22,8 @@ export enum ScreenType {
   DESKTOP
 }
 
-export function useGetScreen = (options = defaultOptions) => {
+
+const useGetScreen = (options = defaultOptions) => {
 
     const getSize = (size: Number): ScreenType => {
         if (size <= options.mobileLimit) {
@@ -74,3 +75,5 @@ export function useGetScreen = (options = defaultOptions) => {
 
     return { isMobile, isTablet, isDesktop };
 }
+
+export default useGetScreen;

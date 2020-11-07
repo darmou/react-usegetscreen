@@ -1,6 +1,6 @@
 ### REACT-USEGETSCREEN
 
-This packagge provides a hook to provide some functions that you can use to determine the 
+This package provides a hook to provide some functions that you can use to determine the 
 type of screen.  Mobile `isMobile`, Tablet `isTablet`, Desktop `isDesktop`
 
 ###### Install
@@ -12,8 +12,8 @@ yarn add react-usegetscreen
 ###### Example
 
 ```
-import React, { Component } from 'react';
-import { useGetScreen } from 'react-usegetscreen'
+import React, { Component } from "react";
+import useGetScreen from "react-usegetscreen";
 
 class Test = () => {
     
