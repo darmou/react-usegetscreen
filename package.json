@@ -1,6 +1,6 @@
 {
   "name": "react-usegetscreen",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "Hook for determining what screen size you have",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -22,8 +22,6 @@
   "license": "ISC",
   "dependencies": {
     "lodash": "^4.17.20",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.165",
